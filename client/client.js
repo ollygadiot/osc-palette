@@ -88,14 +88,14 @@ function updateRectanglesAnimation(value) {
       gsap.to(`.rect-${i}`, {
         rotateY: rotationAngle,
         duration: duration,
-        ease: "power2.out"
+        // ease: ""
       });
     } else {
       // Hide rectangles that shouldn't be visible (rotated to edge)
       gsap.to(`.rect-${i}`, {
         rotateY: -90,
         duration: duration,
-        ease: "power2.in"
+        // ease: "power2.in"
       });
     }
   }
