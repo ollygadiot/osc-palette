@@ -94,7 +94,7 @@ df-osc/
 
 ## License
 
-[ISC License](LICENSE)
+MIT License
 
 ## Author
 
