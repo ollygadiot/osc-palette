@@ -100,3 +100,6 @@ MIT License
 ## Author
 
 Olly Gadiot
+
+## Acknowledgements
+[Graphics are based on the Palette Wallpaper pack by Oliur](https://store.oliur.com/b/palette-wallpaper-pack)
