@@ -2,6 +2,7 @@
 
 A web-based visualization system that connects to DragonFrame via OSC (Open Sound Control) and displays motion control data with interactive animations.
 
+![DragonFrame OSC Visualization Interface](client/palette-overview-small.png)
 
 ## Overview
 
