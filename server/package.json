@@ -1,0 +1,17 @@
+{
+  "name": "df-osc",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "node-osc": "^9.1.5",
+    "ws": "^8.18.2"
+  }
+}

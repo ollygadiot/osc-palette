@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DragonFrame OSC - Rotating Rectangles</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #f5f5dc, #e8e8d0);
+            height: 100vh;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Status panel styles */
+        .status-panel {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 15px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-bottom-left-radius: 10px;
+            z-index: 1000;
+            min-width: 250px;
+        }
+
+        #status {
+            margin-bottom: 10px;
+            padding: 5px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+        }
+
+        .axis-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 5px;
+        }
+
+        .axis-box {
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 4px;
+            background-color: #f8f8f8;
+            font-size: 14px;
+        }
+
+        .axis-name {
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+
+        .axis-value {
+            color: #0066cc;
+        }
+
+        /* Container for gradient rectangles */
+        .container {
+            position: relative;
+            width: 1690px;
+            height: 800px;
+            margin: 0 auto;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .rectangle-wrapper {
+            position: absolute;
+            width: 260px;
+            height: 800px;
+            /* Each wrapper has its own perspective */
+            perspective: 1200px;
+        }
+
+        .rectangle {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 130px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transform-origin: center center;
+            transform-style: preserve-3d;
+            backface-visibility: visible;
+        }
+
+        .rect-1 { background: #c8d882; }
+        .rect-2 { background: #a8d085; }
+        .rect-3 { background: #88c888; }
+        .rect-4 { background: #68c08b; }
+        .rect-5 { background: #48b88e; }
+        .rect-6 { background: #38a891; }
+        .rect-7 { background: #289894; }
+        .rect-8 { background: #288897; }
+        .rect-9 { background: #28789a; }
+        .rect-10 { background: #28689d; }
+        .rect-11 { background: #2858a0; }
+        .rect-12 { background: #2848a3; }
+        /* Manual slider control panel */
+        .slider-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 300px;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        .slider-control h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        #manual-slider {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .slider-value {
+            text-align: center;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .slider-buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .slider-buttons button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .slider-buttons button:hover {
+            background-color: #45a049;
+        }
+    </style>
+    <!-- GSAP Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="client.js" defer></script>
+</head>
+<body>
+    <!-- Status panel -->
+    <div class="status-panel">
+        <h3>DragonFrame OSC Bridge - Rotate</h3>
+        <div id="status">Connecting...</div>
+        <h4>Axis Data</h4>
+        <div id="axes-container" class="axis-container">
+            <!-- Axis divs will be dynamically created here -->
+        </div>
+    </div>
+
+    <!-- Gradient rectangles container -->
+    <div class="container">
+        <div class="rectangle-wrapper" style="left: 0px; z-index: 12;"><div class="rectangle rect-1"></div></div>
+        <div class="rectangle-wrapper" style="left: 130px; z-index: 11;"><div class="rectangle rect-2"></div></div>
+        <div class="rectangle-wrapper" style="left: 260px; z-index: 10;"><div class="rectangle rect-3"></div></div>
+        <div class="rectangle-wrapper" style="left: 390px; z-index: 9;"><div class="rectangle rect-4"></div></div>
+        <div class="rectangle-wrapper" style="left: 520px; z-index: 8;"><div class="rectangle rect-5"></div></div>
+        <div class="rectangle-wrapper" style="left: 650px; z-index: 7;"><div class="rectangle rect-6"></div></div>
+        <div class="rectangle-wrapper" style="left: 780px; z-index: 6;"><div class="rectangle rect-7"></div></div>
+        <div class="rectangle-wrapper" style="left: 910px; z-index: 5;"><div class="rectangle rect-8"></div></div>
+        <div class="rectangle-wrapper" style="left: 1040px; z-index: 4;"><div class="rectangle rect-9"></div></div>
+        <div class="rectangle-wrapper" style="left: 1170px; z-index: 3;"><div class="rectangle rect-10"></div></div>
+        <div class="rectangle-wrapper" style="left: 1300px; z-index: 2;"><div class="rectangle rect-11"></div></div>
+        <div class="rectangle-wrapper" style="left: 1430px; z-index: 1;"><div class="rectangle rect-12"></div></div>
+    </div>
+
+    <!-- Manual slider control -->
+    <div class="slider-control">
+        <h3>Manual Timeline Control</h3>
+        <div class="slider-value">Value: <span id="slider-value-display">0</span></div>
+        <input type="range" id="manual-slider" min="0" max="100000" step="1000" value="0">
+        <div class="slider-buttons">
+            <button id="play-button">Play</button>
+            <button id="reset-button">Reset</button>
+            <button id="loop-toggle">Loop: Off</button>
+        </div>
+    </div>
+
+    <script>
+        // Manual slider control
+        document.addEventListener('DOMContentLoaded', function() {
+            const slider = document.getElementById('manual-slider');
+            const valueDisplay = document.getElementById('slider-value-display');
+            const playButton = document.getElementById('play-button');
+            const resetButton = document.getElementById('reset-button');
+            const loopToggle = document.getElementById('loop-toggle');
+
+            let isPlaying = false;
+            let isLooping = false;
+            let animationInterval;
+
+            // Update animation when slider value changes
+            slider.addEventListener('input', function() {
+                const value = parseInt(slider.value);
+                valueDisplay.textContent = value;
+
+                // Call the animation update function from rotate_client.js
+                if (typeof updateRectanglesAnimation === 'function') {
+                    updateRectanglesAnimation(value);
+                }
+            });
+
+            // Play/Pause button
+            playButton.addEventListener('click', function() {
+                if (isPlaying) {
+                    clearInterval(animationInterval);
+                    playButton.textContent = 'Play';
+                } else {
+                    // Start animation from current position
+                    animationInterval = setInterval(function() {
+                        let currentValue = parseInt(slider.value);
+                        if (currentValue >= 100000) {
+                            if (isLooping) {
+                                currentValue = 0;
+                            } else {
+                                clearInterval(animationInterval);
+                                playButton.textContent = 'Play';
+                                isPlaying = false;
+                                return;
+                            }
+                        } else {
+                            currentValue += 1000;
+                        }
+
+                        slider.value = currentValue;
+                        valueDisplay.textContent = currentValue;
+
+                        if (typeof updateRectanglesAnimation === 'function') {
+                            updateRectanglesAnimation(currentValue);
+                        }
+                    }, 50); // Update every 50ms
+
+                    playButton.textContent = 'Pause';
+                }
+                isPlaying = !isPlaying;
+            });
+
+            // Reset button
+            resetButton.addEventListener('click', function() {
+                slider.value = 0;
+                valueDisplay.textContent = 0;
+
+                if (typeof updateRectanglesAnimation === 'function') {
+                    updateRectanglesAnimation(0);
+                }
+            });
+
+            // Loop toggle
+            loopToggle.addEventListener('click', function() {
+                isLooping = !isLooping;
+                loopToggle.textContent = isLooping ? 'Loop: On' : 'Loop: Off';
+            });
+        });
+    </script>
+</body>
+</html>
